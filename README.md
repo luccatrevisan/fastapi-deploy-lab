@@ -49,10 +49,11 @@ luccatrevisan.dev
 
 ## Endpoints
 
-| Method | Path      | Description                  |
+| Method | Path      | Description                   |
 |--------|-----------|-------------------------------|
 | GET    | `/`       | Returns a simple greeting     |
 | GET    | `/health` | Health check endpoint         |
+| GET    | `/docs`   | Documentation from Swagger    |
 
 ## Running Locally
 
@@ -90,14 +91,13 @@ The deployed instance on EC2 pulls the updated image manually for now. A future 
 
 ## Technical Decisions
 
-- **`0.0.0.0` as the bind host:** Uvicorn (and the Flask services in a related project) must bind to `0.0.0.0`, not `127.0.0.1`, inside a container, otherwise the process only accepts connections from within the container itself, and external traffic never reaches it, even with the port correctly published.
+- **`0.0.0.0` as the bind host:** Uvicorn must bind to `0.0.0.0` - not `127.0.0.1` - inside a container, otherwise the process only accepts connections from within the container itself, and external traffic never reaches it, even with the port correctly published.
 - **Nginx as a reverse proxy instead of exposing Uvicorn directly:** the application container only accepts connections on an internal port (8000), never directly on 80/443. Nginx sits in front, handling public traffic and, eventually, TLS termination — a closer approximation of how production systems are typically structured.
 - **Two image tags per build (`latest` + commit SHA):** always having a "current" tag for convenience, while retaining a permanent, traceable reference to exactly which commit produced which image.
-- **Manual EC2 pull, not full automation:** deliberately kept this step manual for now, to make sure each part of the pipeline is understood individually before adding further automation on top.
 
 ## Motivation
 
-This lab exists to close a specific gap: hands-on, real deployment experience — beyond `localhost` — with the same rigor applied to [digital_menu](https://github.com/luccatrevisan/digital_menu)'s backend architecture. Understanding *why* each layer of this pipeline exists (not just how to copy-paste the commands) is the actual goal here.
+This lab exists to close a specific gap: hands-on, real deployment experience with the same rigor applied to [digital_menu](https://github.com/luccatrevisan/digital_menu)'s backend architecture. Understanding *why* each layer of this pipeline exists (not just how to copy-paste the commands) is the actual goal here. The project also can improve with docker compose, testing, automatic EC2 pull, dealing with databases and other improvements.
 
 ## License
 
