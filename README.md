@@ -1,7 +1,6 @@
 # fastapi-deploy-lab
 
-A minimal FastAPI application built as a hands-on lab to understand a complete, real-world deployment pipeline. 
-From local code to a live, HTTPS-secured domain.
+A minimal FastAPI application built as a hands-on lab to understand a complete, real-world deployment pipeline.
 
 ## Purpose
 
@@ -33,8 +32,11 @@ luccatrevisan.dev
 
 ## Live Demo
 
-🔗 [https://luccatrevisan.dev](https://luccatrevisan.dev)
-🔗 [https://luccatrevisan.dev/health](https://luccatrevisan.dev/health)
+- **Base URL:** https://luccatrevisan.dev
+- **Quick test:** 
+```bash
+curl https://luccatrevisan.dev
+```
 
 ## Tech Stack
 
@@ -44,7 +46,7 @@ luccatrevisan.dev
 - **Registry:** Docker Hub
 - **Infrastructure:** AWS EC2 (Ubuntu)
 - **Reverse Proxy:** Nginx
-- **TLS/SSL:** Let's Encrypt (Certbot)
+- **TLS/SSL:** Certbot (Let's Encrypt)
 - **DNS:** Hostinger
 
 ## Endpoints
@@ -92,13 +94,18 @@ The deployed instance on EC2 pulls the updated image manually for now. A future 
 ## Technical Decisions
 
 - **`0.0.0.0` as the bind host:** Uvicorn must bind to `0.0.0.0` - not `127.0.0.1` - inside a container, otherwise the process only accepts connections from within the container itself, and external traffic never reaches it, even with the port correctly published.
-- **Nginx as a reverse proxy instead of exposing Uvicorn directly:** the application container only accepts connections on an internal port (8000), never directly on 80/443. Nginx sits in front, handling public traffic and, eventually, TLS termination — a closer approximation of how production systems are typically structured.
+- **Nginx as a reverse proxy instead of exposing Uvicorn directly:** the application container only accepts connections on an internal port (8000), never directly on 80/443. Nginx sits in front, handling public traffic and TLS termination — a closer approximation of how production systems are typically structured.
 - **Two image tags per build (`latest` + commit SHA):** always having a "current" tag for convenience, while retaining a permanent, traceable reference to exactly which commit produced which image.
 
 ## Motivation
 
-This lab exists to close a specific gap: hands-on, real deployment experience with the same rigor applied to [digital_menu](https://github.com/luccatrevisan/digital_menu)'s backend architecture. Understanding *why* each layer of this pipeline exists (not just how to copy-paste the commands) is the actual goal here. The project also can improve with docker compose, testing, automatic EC2 pull, dealing with databases and other improvements.
+This lab exists to close a specific gap: hands-on, real deployment experience with the same rigor applied to [digital_menu](https://github.com/luccatrevisan/digital_menu)'s backend architecture. Understanding *why* each layer of this pipeline exists (not just how to copy-paste the commands) is the actual goal here.
+
+## Possible Improvements:
+- Docker Compose
+- Add automated tests to the CI/CD pipeline
+- Automate pull/deploy on EC2
+- Evolve the application to handle databases
 
 ## License
-
 MIT
