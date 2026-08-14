@@ -8,27 +8,17 @@ This project is intentionally simple on the application side (a "Hello World" AP
 
 Rather than waiting to containerize and deploy a larger system, this lab isolates the deployment pipeline as its own subject of study.
 
-## Pipeline
+## Architecture
 
-```
-FastAPI
-   ↓
-Docker
-   ↓
-GitHub
-   ↓
-GitHub Actions (CI)
-   ↓
-Docker Hub
-   ↓
-AWS EC2 (Ubuntu)
-   ↓
-Nginx (reverse proxy)
-   ↓
-HTTPS (Let's Encrypt)
-   ↓
-luccatrevisan.dev
-```
+![Deployment architecture showing DNS resolution, EC2, Nginx reverse proxy, Docker container, and FastAPI app](/docs/img/fastapi-deploy-lab.png)
+
+| Step | Component | Action |
+|------|-----------|--------|
+| 1 | Hostinger (DNS) | Resolves domain to EC2 public IP |
+| 2 | Browser | Connects directly to EC2 on port 443 |
+| 3 | Nginx | Terminates TLS, proxies to port 8000 |
+| 4 | Docker | Maps host port 8000 to container port 8000 |
+| 5 | FastAPI | Handles the request via Uvicorn |
 
 ## Live Demo
 
